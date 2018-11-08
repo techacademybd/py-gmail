@@ -104,4 +104,4 @@ msg = "Order details are given below\n\n" + \
       row_wise_vals
 
 print(msg)
-send_email(subject, msg)
+#send_email(subject, msg)
