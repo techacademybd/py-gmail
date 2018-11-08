@@ -1,5 +1,13 @@
+import datetime
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+
+
+# run these before running the script
+
+# pip install gspread
+# pip install --upgrade google-api-python-client oauth2client
+
 
 # APIs are used
 scope = ['http://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
@@ -15,17 +23,8 @@ gc = gspread.authorize(credentials)
 # open ss
 worksheet = gc.open('test')
 
-# main order cart
+# sheet 5
 wks_1 = worksheet.get_worksheet(4)
-
-# component with associated links
-wks_2 = worksheet.get_worksheet(3)
-
-
-# read, write, update, append, delete
-def read_data():
-    data = wks_2.get_all_records()
-    print(data)
 
 
 def empty_string(val):
@@ -47,19 +46,24 @@ def comp_list(comps):
     else:
         return comps
 
+def format_date(date):
+    return date[:3] + date[4:6] + date[8:]
 
+# get all values in the column
 values_list = comp_list(wks_1.col_values(1)[1:])
 
-checker = "11-8-18"
+# get datetime
+print("Getting today's date....")
+date_time = datetime.datetime.now()
+checker = date_time.strftime("%m-%d-%Y")
 
+# get todays date
+checker = format_date(checker)
+
+# check if date is in the spreadsheet column
 if checker in values_list:
     find = wks_1.find(values_list[values_list.index(checker)])
     r, c = find.row, find.col
-    print("Found at %d, %d" %(r, c))
-
-
-
-
-
-
-
+    print("Date at (row,column) --> %d, %d" %(r, c))
+else:
+    print("Not found.. :(")
