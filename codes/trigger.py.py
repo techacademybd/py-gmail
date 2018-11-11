@@ -2,6 +2,8 @@ import datetime
 import os
 
 
+'''Triggers the post-email.py script in the given time
+'''
 # input time in hours, minutes and seconds...
 checker = "15:14:30"
 

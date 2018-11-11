@@ -1,6 +1,9 @@
 import imaplib
 import email
 
+'''Read the latest email in the inbox
+'''
+
 # sender email and password
 FROM_EMAIL = "techacademy1234@gmail.com"
 FROM_PWD = "TESTtta1234"

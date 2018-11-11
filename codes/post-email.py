@@ -1,12 +1,15 @@
-# get data from google sheets and send email
+import smtplib
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
+'''Get data from google sheets and send email
+'''
 
 # donwload this file: https://drive.google.com/open?id=1ZLkpBmo130ApyW_cjeh8EtZROzMBkcgI
 # keep in same directory as this script
 
-import smtplib
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+
+
 
 # APIs are used
 scope = ['http://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']

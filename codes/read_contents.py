@@ -1,6 +1,12 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
+
+'''Check a pre-defined string in a column in spreadsheet,
+return the index if found
+'''
+
+
 # APIs are used
 scope = ['http://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 

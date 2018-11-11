@@ -2,9 +2,13 @@ import datetime
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
+'''This script takes the current date and matches it with a column of dates
+in the spreadsheet. Returns the row and column number if found.
+'''
+
+
 
 # run these before running the script
-
 # pip install gspread
 # pip install --upgrade google-api-python-client oauth2client
 

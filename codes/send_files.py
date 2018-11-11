@@ -4,6 +4,9 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
+'''Send an email with attachments
+'''
+
 # ref: http://naelshiab.com/tutorial-send-email-python/
 
 fromaddr = "techacademy1234@gmail.com"

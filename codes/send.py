@@ -1,5 +1,8 @@
 import smtplib
 
+'''Send an email'''
+
+
 SOURCE_EMAIL_ADDRESS = "techacademy1234@gmail.com"
 PASSWORD = "TESTtta1234"
 
