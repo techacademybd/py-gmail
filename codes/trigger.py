@@ -4,6 +4,7 @@ import os
 
 '''Triggers the post-email.py script in the given time
 '''
+
 # input time in hours, minutes and seconds...
 checker = "15:14:30"
 
@@ -15,6 +16,4 @@ while 1:
     if t == checker:
         print("Starting new script....")
         os.system("post-email.py 1")
-        break;
-
-
+        break

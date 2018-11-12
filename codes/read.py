@@ -2,8 +2,7 @@ import json
 import imaplib
 import email
 
-'''Read the latest email in the inbox
-'''
+# Works in Python 2.7 only
 
 # Get required account information for sending email from offline json file
 account_info = json.load(open("accounts.json", "r"))
@@ -51,3 +50,4 @@ print("\n")
 print("Email subject: " + str(email_message['Subject']))
 print("\n")
 print("Message: " + str(message))
+
