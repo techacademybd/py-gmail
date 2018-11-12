@@ -1,3 +1,4 @@
+import json
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -5,14 +6,13 @@ from email.mime.base import MIMEBase
 from email import encoders
 
 '''Send an email with attachments
+     ref: http://naelshiab.com/tutorial-send-email-python/
 '''
-
-# ref: http://naelshiab.com/tutorial-send-email-python/
-
-fromaddr = "techacademy1234@gmail.com"
-PASSWORD = "TESTtta1234"
-
-toaddr = "hasibzunair@gmail.com"
+# Get required account information for sending email from offline json file
+account_info = json.load(open("accounts.json", "r"))
+fromaddr = account_info['SOURCE_EMAIL_ADDRESS']
+PASSWORD = account_info['PASSWORD']
+toaddr = account_info['DEST_EMAIL_ADDRESS']
 
 msg = MIMEMultipart()
 

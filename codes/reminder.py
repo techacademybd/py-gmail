@@ -1,3 +1,4 @@
+import json
 import smtplib
 import datetime
 import gspread
@@ -6,16 +7,18 @@ from oauth2client.service_account import ServiceAccountCredentials
 # APIs are used
 scope = ['http://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 
-# keep secret
-cred_file = 'Sheets Test2-316f8201c13e.json'  # --->>>> techacademy1234@gmail.com
+# Credentials file for Google Sheets
+cred_file = 'Sheets Test2-316f8201c13e.json'
 
 credentials = ServiceAccountCredentials.from_json_keyfile_name(cred_file, scope)
 
-SOURCE_EMAIL_ADDRESS = "techacademy1234@gmail.com"
-PASSWORD = "TESTtta1234"
+# Get required account information for sending email from offline json file
+account_info = json.load(open("accounts.json", "r"))
+SOURCE_EMAIL_ADDRESS = account_info['SOURCE_EMAIL_ADDRESS']
+PASSWORD = account_info['PASSWORD']
+DEST_EMAIL_ADDRESS = account_info['DEST_EMAIL_ADDRESS']
 
-DEST_EMAIL_ADDRESS = "sjistheboss@gmail.com"
-
+# Email subject and body
 subject = "Class Documentation"
 message = "What happened in class today?"
 
@@ -40,7 +43,8 @@ gc = gspread.authorize(credentials)
 worksheet = gc.open('test')
 
 # sheet 7 ("demo")
-wks_1 = worksheet.get_worksheet(6)
+wks_1 = worksheet.worksheet('demo')
+
 
 # Get today's date and day of week
 date_time = datetime.datetime.now()
@@ -91,4 +95,4 @@ else:
                 r = r + 1
 
     # Send email
-    (subject, message)
+    send_email(subject, message)

@@ -1,13 +1,14 @@
+import json
 import imaplib
 import email
 
 '''Read the latest email in the inbox
 '''
 
-# sender email and password
-FROM_EMAIL = "techacademy1234@gmail.com"
-FROM_PWD = "TESTtta1234"
-
+# Get required account information for sending email from offline json file
+account_info = json.load(open("accounts.json", "r"))
+FROM_EMAIL = account_info['SOURCE_EMAIL_ADDRESS']
+FROM_PWD = account_info['PASSWORD']
 
 # convert raw message block to READABLE text
 def get_first_text_block(email_message_instance):

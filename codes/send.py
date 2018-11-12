@@ -1,12 +1,13 @@
+import json
 import smtplib
 
 '''Send an email'''
 
-
-SOURCE_EMAIL_ADDRESS = "techacademy1234@gmail.com"
-PASSWORD = "TESTtta1234"
-
-DEST_EMAIL_ADDRESS = "hasibzunair@gmail.com"
+# Get required account information for sending email from offline json file
+account_info = json.load(open("accounts.json", "r"))
+SOURCE_EMAIL_ADDRESS = account_info['SOURCE_EMAIL_ADDRESS']
+PASSWORD = account_info['PASSWORD']
+DEST_EMAIL_ADDRESS = account_info['DEST_EMAIL_ADDRESS']
 
 def send_email(subject, msg):
     try:
