@@ -3,6 +3,7 @@ import smtplib
 import datetime
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from Call_SMS_Notification import call_number
 
 # APIs are used
 scope = ['http://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
@@ -67,6 +68,7 @@ if checker in dates:
     # If date found but not documented, send email
     if wks_1.cell(r,c+2).value == "":
         send_email(subject, message)
+        call_number('01687709005')
     else:
         print(":)")
 
@@ -96,3 +98,4 @@ else:
 
     # Send email
     send_email(subject, message)
+    call_number('01687709005')
