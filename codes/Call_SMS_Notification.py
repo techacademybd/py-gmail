@@ -35,7 +35,16 @@ def call_number(number):
 
     AT_number = 'ATD{n}'.format(n = number)# format AT input with variable
     port.write(str.encode(AT_number+'\r\n'))# calls the number
-    receive= port.read(100)
-    print (receive)
-    # port.write(str.encode('ATH'))
-
+    
+    while (True):
+        
+        flag = False
+        receive= port.read(100)
+        print(receive)
+        try : 
+            if(receive[19] == 48):
+                port.write(str.encode('ATH\r\n'))
+                # time.sleep(15) 
+                break  
+        except :
+            pass 
