@@ -12,6 +12,21 @@ ACCOUNT_INFO = json.load(open("accounts.json", "r"))
 FROM_EMAIL = ACCOUNT_INFO['SOURCE_EMAIL_ADDRESS']
 FROM_PWD = ACCOUNT_INFO['PASSWORD']
 
+# APIs are used
+scope = ['http://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+# keep secret
+cred_file = 'Sheets Test2-316f8201c13e.json'  # --->>>> techacademy1234@gmail.com
+
+credentials = ServiceAccountCredentials.from_json_keyfile_name(cred_file, scope)
+
+# authorize
+gc = gspread.authorize(credentials)
+# open ss
+worksheet = gc.open('test')
+wks_1 = worksheet.get_worksheet(5)
+# wks_1 = worksheet.worksheet("Sheet 6")
+
+
 # convert raw message block to READABLE text
 def get_first_text_block(email_message_instance):
     maintype = email_message_instance.get_content_maintype()
@@ -30,43 +45,24 @@ mail.list()
 mail.select("inbox")
 
 result, data = mail.search(None, "ALL")
-
 # data is a list
 ids = data[0]
-
 # ids is a space separated string
 id_list = ids.split()
-
 # get the latest email in the inbox stack
 latest_email_id = id_list[-1]
-
 # get raw email
 _, data = mail.fetch(latest_email_id, "(RFC822)")
 raw_email = data[0][1]
 
-# APIs are used
-scope = ['http://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-
-# keep secret
-cred_file = 'Sheets Test2-316f8201c13e.json'  # --->>>> techacademy1234@gmail.com
-
-credentials = ServiceAccountCredentials.from_json_keyfile_name(cred_file, scope)
-
-# authorize
-gc = gspread.authorize(credentials)
-
-# open ss
-worksheet = gc.open('test')
-
-wks_1 = worksheet.get_worksheet(5)
-# wks_1 = worksheet.worksheet("Sheet 6")
-
 decoded_raw_email = raw_email.decode()
 email_message = email.message_from_string(decoded_raw_email)
-
 # convert raw email to text
 message = get_first_text_block(email_message)
 
+
+
+# debug for visualizations
 '''
 print("Sent from: " + str(email.utils.parseaddr(email_message['From'])[1]))
 print("\n")
@@ -79,11 +75,12 @@ print("Message: " + str(message))
 '''
 
 '''Put logic here:
-    If name is in column then update message block in that column
+    If name is in column then update message block in THAT column
 '''
 
 for i in range(2):
     wks_1.update_cell(i+2, 2, message)
-    
+
+print("Updated!")
 # go here before running script to see demo
 # https://docs.google.com/spreadsheets/d/140vlBiZmISWAueX-rAOQMX0QL3e7ygyIbYkPA4ORTTk/edit?usp=sharing
