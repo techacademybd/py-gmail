@@ -84,3 +84,6 @@ print("Message: " + str(message))
 
 for i in range(2):
     wks_1.update_cell(i+2, 2, message)
+    
+# go here before running script to see demo
+# https://docs.google.com/spreadsheets/d/140vlBiZmISWAueX-rAOQMX0QL3e7ygyIbYkPA4ORTTk/edit?usp=sharing
