@@ -2,14 +2,15 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import imaplib
 import email
+import json
 
 '''Read the latest email and updates the message content in google sheets
 '''
 
-# sender email and password
-FROM_EMAIL = "techacademy1234@gmail.com"
-FROM_PWD = "TESTtta1234"
-
+# get credentials
+ACCOUNT_INFO = json.load(open("accounts.json", "r"))
+FROM_EMAIL = ACCOUNT_INFO['SOURCE_EMAIL_ADDRESS']
+FROM_PWD = ACCOUNT_INFO['PASSWORD']
 
 # convert raw message block to READABLE text
 def get_first_text_block(email_message_instance):
@@ -54,15 +55,11 @@ credentials = ServiceAccountCredentials.from_json_keyfile_name(cred_file, scope)
 # authorize
 gc = gspread.authorize(credentials)
 
-SOURCE_EMAIL_ADDRESS = "techacademy1234@gmail.com"
-PASSWORD = "TESTtta1234"
-
 # open ss
 worksheet = gc.open('test')
 
-# main order cart
 wks_1 = worksheet.get_worksheet(5)
-# wks_1 = worksheet.worksheet("Sheet 1")
+# wks_1 = worksheet.worksheet("Sheet 6")
 
 decoded_raw_email = raw_email.decode()
 email_message = email.message_from_string(decoded_raw_email)
@@ -70,11 +67,16 @@ email_message = email.message_from_string(decoded_raw_email)
 # convert raw email to text
 message = get_first_text_block(email_message)
 
+'''
 print("Sent from: " + str(email.utils.parseaddr(email_message['From'])[1]))
+print("\n")
+print("Sent from: " + str(email.utils.parseaddr(email_message['From'])[0]))
 print("\n")
 print("Email subject: " + str(email_message['Subject']))
 print("\n")
 print("Message: " + str(message))
+
+'''
 
 '''Put logic here:
     If name is in column then update message block in that column
