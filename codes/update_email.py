@@ -3,6 +3,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import imaplib
 import email
 import json
+from collections import defaultdict
 
 '''Read the latest email and updates the message content in google sheets
 '''
@@ -44,43 +45,66 @@ mail.login(FROM_EMAIL, FROM_PWD)
 mail.list()
 mail.select("inbox")
 
-result, data = mail.search(None, "ALL")
-# data is a list
-ids = data[0]
-# ids is a space separated string
-id_list = ids.split()
-# get the latest email in the inbox stack
-latest_email_id = id_list[-1]
-# get raw email
-_, data = mail.fetch(latest_email_id, "(RFC822)")
-raw_email = data[0][1]
-
-decoded_raw_email = raw_email.decode()
-email_message = email.message_from_string(decoded_raw_email)
-# convert raw email to text
-message = get_first_text_block(email_message)
 
 
+def get_email(counter):
+
+    result, data = mail.search(None, "ALL")
+    # data is a list
+    ids = data[0]
+    # ids is a space separated string
+    id_list = ids.split()
+    # get the latest email in the inbox stack
+    
+    counter = -counter
+    latest_email_id = id_list[counter]
+
+    # get raw email
+    _, data = mail.fetch(latest_email_id, "(RFC822)")
+    raw_email = data[0][1]
+
+    decoded_raw_email = raw_email.decode()
+    email_message = email.message_from_string(decoded_raw_email)
+    # convert raw email to text
+    message = get_first_text_block(email_message)
+    # print(str(email.utils.parseaddr(email_message['From'])[0]))
+    name = str(email.utils.parseaddr(email_message['From'])[0])
+    return name, message
+
+count = 2
+# store name of sender and message in dictionary
+book = defaultdict(list) 
+msgs = []
+for i in range(count):
+    i+=1
+    name, msg = get_email(i)
+    # print(name, msg)
+    book[name].append(msg)
+    msgs.append(msg)
+
+#print(book.keys())
 
 # debug for visualizations
 '''
-print("Sent from: " + str(email.utils.parseaddr(email_message['From'])[1]))
-print("\n")
-print("Sent from: " + str(email.utils.parseaddr(email_message['From'])[0]))
-print("\n")
-print("Email subject: " + str(email_message['Subject']))
-print("\n")
-print("Message: " + str(message))
-
+Email: str(email.utils.parseaddr(email_message['From'])[1]))
+Name: str(email.utils.parseaddr(email_message['From'])[0]))
+Email subject: str(email_message['Subject']))
+Message: str(message))
 '''
 
 '''Put logic here:
     If name is in column then update message block in THAT column
 '''
 
+_, message = get_email(2)
+
+print(message)
+#print(msgs)
 for i in range(2):
     wks_1.update_cell(i+2, 2, message)
 
 print("Updated!")
+
 # go here before running script to see demo
 # https://docs.google.com/spreadsheets/d/140vlBiZmISWAueX-rAOQMX0QL3e7ygyIbYkPA4ORTTk/edit?usp=sharing
+
