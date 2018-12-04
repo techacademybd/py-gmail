@@ -4,6 +4,7 @@ import imaplib
 import email
 import json
 from collections import defaultdict
+import pandas as pd
 
 '''Read the latest email and updates the message content in google sheets
 '''
@@ -13,11 +14,16 @@ ACCOUNT_INFO = json.load(open("accounts.json", "r"))
 FROM_EMAIL = ACCOUNT_INFO['SOURCE_EMAIL_ADDRESS']
 FROM_PWD = ACCOUNT_INFO['PASSWORD']
 
+# login with credentials and get inbox data
+mail = imaplib.IMAP4_SSL('imap.gmail.com')
+mail.login(FROM_EMAIL, FROM_PWD)
+mail.list()
+mail.select("inbox")
+
 # APIs are used
 scope = ['http://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 # keep secret
 cred_file = 'Sheets Test2-316f8201c13e.json'  # --->>>> techacademy1234@gmail.com
-
 credentials = ServiceAccountCredentials.from_json_keyfile_name(cred_file, scope)
 
 # authorize
@@ -38,16 +44,8 @@ def get_first_text_block(email_message_instance):
     elif maintype == 'text':
         return email_message_instance.get_payload()
 
-
-# login with credentials and get inbox data
-mail = imaplib.IMAP4_SSL('imap.gmail.com')
-mail.login(FROM_EMAIL, FROM_PWD)
-mail.list()
-mail.select("inbox")
-
-
-
-def get_email(counter):
+# read emails from inbox
+def get_email(counter): # counter: read how many emails?
 
     result, data = mail.search(None, "ALL")
     # data is a list
@@ -69,20 +67,35 @@ def get_email(counter):
     message = get_first_text_block(email_message)
     # print(str(email.utils.parseaddr(email_message['From'])[0]))
     name = str(email.utils.parseaddr(email_message['From'])[0])
+
+    # twats sending long texts!
+    if len(message) > 100:
+        message = message[:100]
     return name, message
 
-count = 2
+# counter to check emails
+count = 8
 # store name of sender and message in dictionary
 book = defaultdict(list) 
-msgs = []
+
+
+# store person: message in google sheets
 for i in range(count):
     i+=1
     name, msg = get_email(i)
-    # print(name, msg)
     book[name].append(msg)
-    msgs.append(msg)
+    wks_1.update_cell(i+1, 1, name)
+    wks_1.update_cell(i+1, 2, msg)
 
-#print(book.keys())
+
+# dataframe to store the book locally
+dt = pd.DataFrame(columns=['Person', "Message"])
+dt['Person'] = book.keys()
+dt['Message'] = book.values()
+
+# save  the file if records need to be kept locally
+#dt.to_csv('book.csv')
+#dt = pd.read_csv('book.csv')
 
 # debug for visualizations
 '''
@@ -95,15 +108,12 @@ Message: str(message))
 '''Put logic here:
     If name is in column then update message block in THAT column
 '''
+# read the nth email from top
+# _, message = get_email(9)
+# print(message)
 
-_, message = get_email(2)
 
-print(message)
-#print(msgs)
-for i in range(2):
-    wks_1.update_cell(i+2, 2, message)
-
-print("Updated!")
+print("Done!")
 
 # go here before running script to see demo
 # https://docs.google.com/spreadsheets/d/140vlBiZmISWAueX-rAOQMX0QL3e7ygyIbYkPA4ORTTk/edit?usp=sharing
